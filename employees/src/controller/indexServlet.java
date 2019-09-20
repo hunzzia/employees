@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.EmployeesDao;
 
 
-@WebServlet("/index")
+@WebServlet({"/","/index"})
 //URL , CONTROLLER 확인
 public class indexServlet extends HttpServlet {
 	private EmployeesDao employeesDao;
@@ -21,7 +21,7 @@ public class indexServlet extends HttpServlet {
 		
 		this.employeesDao = new EmployeesDao();
 		int employeesRowCount = employeesDao.selectEmployeesCount();// 모델에서 데이터를 가져온다
-	// /WEB-INF/views/index.jsp
+		// /WEB-INF/views/index.jsp
 		//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/index.jsp");
 		//rd.forword(request , response);
 		//인덱스를 요청하면 컨트롤러가 index.jsp 를 요청해준다
