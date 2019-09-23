@@ -3,6 +3,50 @@ import java.sql.*;
 import java.util.*;
 import vo.*;
 public class EmployeesDao {
+	// first_name 오름차순 내림차순 별 사원 정보 출력 시작 
+	public List<Employee> selectEmployeesListOrderby(String order){
+		System.out.println("selectEmployeesListOrderby param limit : "+order);
+		//동적 쿼리
+		List<Employee> list = new ArrayList<Employee>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql ="";
+		if(order.equals("asc")) {//오름차순
+			sql = "select*from employees order by first_name asc limit 50";
+		}else if(order.equals("desc")){//내림차순
+			sql = "select*from employees order by first_name desc limit 50";
+		}
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");// 드라이버 이름 적음
+			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				Employee employee = new Employee();
+				employee.setEmpNo(rs.getInt("emp_no"));
+				employee.setBirthDate(rs.getString("birth_date"));
+				employee.setFirstName(rs.getString("first_name"));
+				employee.setLastName(rs.getString("last_name"));
+				employee.setGender(rs.getString("gender"));
+				employee.setHireDate(rs.getString("hire_date"));
+				list.add(employee);
+				}		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	// first_name 오름차순 내림차순 별 사원 정보 출력 시끝
+	
 	// limit 별로 사원 정보를 출력하는 메서드 시작
 	public List<Employee> selectEmployeesListByLimit(int limit){
 		System.out.println("selectEmployeesListByLimit param limit :"+ limit);
@@ -54,7 +98,7 @@ public class EmployeesDao {
 	// limit 별로 사원 정보를 출력하는 메서드 끝
 	
 	// 총 사원수를 출력하는 메서드 시작
-	public int selectEmployeesCount() {
+	public int selectEmployeesRowCount() {
 		int count =0;
 		final String sql = "SELECT COUNT(*) FROM employees"; // 쿼리가 변하면 안됨 final 로 고정
 		Connection conn = null;

@@ -8,15 +8,55 @@
 </head>
 <body>
 	<h1>index</h1>
-	<!-- 사원의 총 인원 -->
+	<h2>테이블 정보</h2>
 	<div>
-		사원 총 인원 : ${employeesRowCount}
+	<!-- 테이블 이름과 전체 행의 수 -->
+		<table border="1">
+			<thead>
+				<tr>
+					<th>테이블이름</th>
+					<th>전체 행의 수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>departments</td>
+					<td>${employeesRowCount}</td>
+				</tr>
+				<tr>
+					<td>employees</td>
+					<td>${departmentsRowCount}</td>
+				</tr>
+				<tr>
+					<td>dept_manager</td>
+					<td>${deptManagerRowCount}</td>
+				</tr>
+				<tr>
+					<td>dept_emp</td>
+					<td>${deptEmpRowCount}</td>
+				</tr>
+				<tr>
+					<td>titles</td>
+					<td>${titlesRowCount}</td>
+				</tr>
+				<tr>
+					<td>salaries</td>
+					<td>${salariesRowCount}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	<!-- WEB APP 네비게이션 -->
 	<div>
 		<ul>
 			<li><a href="${pageContext.request.contextPath}/departments/getDepartmentsList">부서목록</a></li>
 			<li><a href="${pageContext.request.contextPath}/employees/getEmployeesList">사원목록</a></li>	
+			<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
+			<li>
+				사원 목록 (first_name)
+				<a href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=asc">[오름차순]</a>
+				<a href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=desc">[내림차순]</a>
+			</li>	
 			<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
 		</ul>	
 	</div>

@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,25 +10,49 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.EmployeesDao;
+import model.*;
 
 
+//1.WebServlet경로 설정
 @WebServlet({"/","/index"})
 //URL , CONTROLLER 확인
 public class indexServlet extends HttpServlet {
+//2.사용할 클레스 타입의 객체 선언 => 캡슐화
 	private EmployeesDao employeesDao;
+	private DepartmentsDao departmentsDao;
+	private DeptManagerDao deptManagerDao;
+	private DeptEmpDao deptEmpDao;
+	private SalariesDao salariesDao;
+	private TitlesDao titlesDao;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("index URL 요청");
+//3.사용할 클레스 타입의 객체 생성 , 4.값을 받을 필드 생성 후 저장
+		departmentsDao = new DepartmentsDao();
+		int departmentsRowCount = departmentsDao.selectDepartmentsRowCount();
+		employeesDao = new EmployeesDao();
+		// count 는 view 로 필요함으로 request 안에 포함시켜 넘긴다 => views 에 넘길수 있는건 request response 두개 밖에 없다
+		int employeesRowCount = employeesDao.selectEmployeesRowCount();
 		
-		this.employeesDao = new EmployeesDao();
-		int employeesRowCount = employeesDao.selectEmployeesCount();// 모델에서 데이터를 가져온다
-		// /WEB-INF/views/index.jsp
-		//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/index.jsp");
-		//rd.forword(request , response);
-		//인덱스를 요청하면 컨트롤러가 index.jsp 를 요청해준다
+		deptManagerDao = new DeptManagerDao();
+		int deptManagerRowCount =deptManagerDao.selectDeptManagerRowCount();
 		
-		request.setAttribute("employeesRowCount", employeesRowCount);// 오토 박싱 레퍼 타입이 자동으로 쓰임 원래는 Integer 타입으로 써야됨 자동으로 변환된다
+		deptEmpDao = new DeptEmpDao();
+		int deptEmpRowCount = deptEmpDao.selectDeptEmpRowCount();
 		
+		salariesDao = new SalariesDao();
+		int salariesRowCount = salariesDao.selectSalariesRowCount();
+		
+		titlesDao = new TitlesDao();
+		int titlesRowCount = titlesDao.selectTitlesRowCount();
+//5.리퀘스트에 값을 지정
+		request.setAttribute("departmentsRowCount", departmentsRowCount);
+		request.setAttribute("employeesRowCount", employeesRowCount);
+		request.setAttribute("deptManagerRowCount", deptManagerRowCount);
+		request.setAttribute("deptEmpRowCount", deptEmpRowCount);
+		request.setAttribute("salariesRowCount", salariesRowCount);
+		request.setAttribute("titlesRowCount", titlesRowCount);
+
+//6.지정한 값을 서버체계 url 에 포워드 방식으로 request response views 에게 전달할 코드
 		request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
 	}
 }

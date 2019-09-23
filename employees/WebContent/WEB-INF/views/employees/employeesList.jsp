@@ -27,6 +27,9 @@
 		</select> 
 		<button type="submit" class="btn btn-info">선택</button>
 	<table class="table table-hover">
+	<div>
+		<a href="${pageContext.request.contextPath}/">홈으로</a>
+	</div>
 	<!-- 사원 정보 제목 -->
 		<thead>
 			<tr>
