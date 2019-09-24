@@ -30,6 +30,8 @@ public class indexServlet extends HttpServlet {
 		departmentsDao = new DepartmentsDao();
 		int departmentsRowCount = departmentsDao.selectDepartmentsRowCount();
 		employeesDao = new EmployeesDao();
+		int maxEmpNo = employeesDao.selectEmpNo("max");
+		int minEmpNo = employeesDao.selectEmpNo("min");
 		// count 는 view 로 필요함으로 request 안에 포함시켜 넘긴다 => views 에 넘길수 있는건 request response 두개 밖에 없다
 		int employeesRowCount = employeesDao.selectEmployeesRowCount();
 		
@@ -51,6 +53,8 @@ public class indexServlet extends HttpServlet {
 		request.setAttribute("deptEmpRowCount", deptEmpRowCount);
 		request.setAttribute("salariesRowCount", salariesRowCount);
 		request.setAttribute("titlesRowCount", titlesRowCount);
+		request.setAttribute("maxEmpNo", maxEmpNo);
+		request.setAttribute("minEmpNo", minEmpNo);
 
 //6.지정한 값을 서버체계 url 에 포워드 방식으로 request response views 에게 전달할 코드
 		request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);

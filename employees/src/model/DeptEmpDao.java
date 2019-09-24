@@ -1,5 +1,7 @@
 package model;
 import java.sql.*;
+
+import db.DBHelper;
 public class DeptEmpDao {
 	public int selectDeptEmpRowCount() {
 		// 1.변수설정 
@@ -9,8 +11,7 @@ public class DeptEmpDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");// 드라이버 이름 적음
-			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			if(rs.next()) { // 이터레이터 구현 되어있는 객채 타입 다음 다음 방식으로 찾을수 있음
@@ -20,9 +21,7 @@ public class DeptEmpDao {
 			
 		}finally{
 			try {
-				rs.close();
-				stmt.close();
-				conn.close();
+				DBHelper.close(rs, stmt, conn);
 			}catch (Exception e) {	// 따라서 위의 catch 와 {} 가 다름으로 아무 이상없음
 				e.printStackTrace();
 			}

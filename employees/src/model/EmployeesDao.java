@@ -1,8 +1,108 @@
 package model;
 import java.sql.*;
 import java.util.*;
+
+import db.DBHelper;
 import vo.*;
 public class EmployeesDao {
+	// 받아온 범위안 사원 정보를 오름차순으로 출력하는 메서드 시작
+	public List<Employee> selectEmployeesListBetween(int begin , int end){
+		List<Employee> list = new ArrayList<Employee>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql ="SELECT emp_no , birth_date , first_name , last_name , gender , hire_date FROM employees WHERE emp_no BETWEEN ? AND ? ORDER BY emp_no ASC";
+		try {
+			conn = DBHelper.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, begin);
+			stmt.setInt(2, end);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				Employee employee = new Employee();
+				employee.setEmpNo(rs.getInt("emp_no"));
+				employee.setBirthDate(rs.getString("birth_date"));
+				employee.setFirstName(rs.getString("first_name"));
+				employee.setLastName(rs.getString("last_name"));
+				employee.setGender(rs.getString("gender"));
+				employee.setHireDate(rs.getString("hire_date"));
+				list.add(employee);
+				}		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DBHelper.close(rs, stmt, conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	// 받아온 범위안 사원 정보를 오름차순으로 출력하는 메서드 끝
+	
+	// 가장 큰 사원번호 와 가장 작은 사원번호를 출력하는 메서드 시작
+	public int selectEmpNo(String str) {
+		int empNo =0;
+		String sql = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		if(str.equals("max")){
+			sql ="select max(emp_no) from employees";
+		}else if (str.equals("min")){
+			sql ="select min(emp_no) from employees";
+		}
+		try {
+			conn = DBHelper.getConnection();
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				empNo = rs.getInt(1);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DBHelper.close(rs, stmt, conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return empNo;
+	}
+	// 가장 큰 사원번호 와 가장 작은 사원번호를 출력하는 메서드 시작
+	
+	// 성별 별 사원수 검색 메서드 시작
+	public List<Map<String , Object>> selectEmployeesCountGroupByGender(){
+		List<Map<String , Object>> list = new ArrayList<Map<String , Object>>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql ="SELECT gender , COUNT(gender) cnt FROM employees GROUP BY gender";
+		try {
+			conn = DBHelper.getConnection();
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				Map<String , Object> map = new HashMap<String, Object>();
+				map.put("gender", rs.getString("gender"));
+				map.put("cnt", rs.getInt("cnt"));
+				list.add(map);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DBHelper.close(rs, stmt, conn);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	// 성별 별 사원수 검색 메서드 끝
+
 	// first_name 오름차순 내림차순 별 사원 정보 출력 시작 
 	public List<Employee> selectEmployeesListOrderby(String order){
 		System.out.println("selectEmployeesListOrderby param limit : "+order);
@@ -18,8 +118,7 @@ public class EmployeesDao {
 			sql = "select*from employees order by first_name desc limit 50";
 		}
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");// 드라이버 이름 적음
-			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
@@ -36,9 +135,7 @@ public class EmployeesDao {
 			e.printStackTrace();
 		}finally {
 			try {
-				rs.close();
-				stmt.close();
-				conn.close();
+				DBHelper.close(rs, stmt, conn);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -61,8 +158,7 @@ public class EmployeesDao {
 		// 		try catch 설정후 모든 객체 종료
 		try {
 		// 3.1 생성한 변수에 각각 마리아 db 연결 코드와 셋팅 업데이트 코드 저장
-			Class.forName("org.mariadb.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, limit);
 			rs = stmt.executeQuery();
@@ -83,9 +179,7 @@ public class EmployeesDao {
 		}finally {
 		// 3.3 모든 객체 종료
 			try {
-				rs.close();
-				stmt.close();
-				conn.close();
+				DBHelper.close(rs, stmt, conn);
 			}catch(Exception e) {
 		// 3.4 객체 종료시 예외 발생하면 출력 코드 
 				e.printStackTrace();
@@ -105,8 +199,7 @@ public class EmployeesDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");// 드라이버 이름 적음
-			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			if(rs.next()) { // 이터레이터 구현 되어있는 객채 타입 다음 다음 방식으로 찾을수 있음
@@ -116,9 +209,7 @@ public class EmployeesDao {
 			
 		}finally{
 			try {
-				rs.close();
-				stmt.close();
-				conn.close();
+				DBHelper.close(rs, stmt, conn);
 			}catch (Exception e) {	// 따라서 위의 catch 와 {} 가 다름으로 아무 이상없음
 				e.printStackTrace();
 			}

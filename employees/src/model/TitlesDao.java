@@ -1,6 +1,36 @@
 package model;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import db.DBHelper;
+import jdk.nashorn.internal.ir.WhileNode;
 public class TitlesDao {
+	public List<String> selectTitlesListDistinct(){
+		Connection conn =null;
+		PreparedStatement stmt= null;
+		ResultSet rs = null;
+		List<String> list = new ArrayList<String>();
+		String sql ="SELECT DISTINCT title FROM titles";
+		try {
+			conn =DBHelper.getConnection();
+			stmt =conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				list.add(rs.getString("title"));
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DBHelper.close(rs, stmt, conn);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
 	public int selectTitlesRowCount() {
 		// 1.변수설정 
 		int count = 0;
@@ -9,8 +39,7 @@ public class TitlesDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");// 드라이버 이름 적음
-			conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees","root","java1234");
+			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			if(rs.next()) { // 이터레이터 구현 되어있는 객채 타입 다음 다음 방식으로 찾을수 있음
@@ -20,9 +49,7 @@ public class TitlesDao {
 			
 		}finally{
 			try {
-				rs.close();
-				stmt.close();
-				conn.close();
+				DBHelper.close(rs, stmt, conn);
 			}catch (Exception e) {	// 따라서 위의 catch 와 {} 가 다름으로 아무 이상없음
 				e.printStackTrace();
 			}
