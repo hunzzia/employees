@@ -5,6 +5,56 @@ import java.util.*;
 import db.DBHelper;
 import vo.*;
 public class EmployeesDao {
+	// 사원정보를 페이징 작업을 통해 출력하는 메서드 시작
+	public List<Employee> selectEmployeesListByPage(int rowPerPage , int currentPage){ // 보고싶은 갯수와 현제 페이지를 매개변수로 받아옴
+		int startRow = (currentPage-1)*rowPerPage; // 시작갯수를 정한다
+		List<Employee> list = new ArrayList<Employee>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql ="SELECT * FROM employees limit ?,?"; // 행과 열을 지정한다
+		try {
+			conn = DBHelper.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, startRow);
+			stmt.setInt(2, rowPerPage);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				Employee employee = new Employee();
+				employee.setEmpNo(rs.getInt("emp_no"));
+				employee.setBirthDate(rs.getString("birth_date"));
+				employee.setFirstName(rs.getString("first_name"));
+				employee.setLastName(rs.getString("last_name"));
+				employee.setGender(rs.getString("gender"));
+				employee.setHireDate(rs.getString("hire_date"));
+				list.add(employee);
+				}		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DBHelper.close(rs, stmt, conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	// 사원정보를 페이징 작업을 통해 출력하는 메서드 끝
+	
+	// 페이징 작업에 필요한 마지막페이지를 구하는 메서드 시작
+	public int selectLastPage( int totalRow ,int rowPerPage ) { // 총갯수와 보고싶은 갯수를 매개변수로 받아온다.
+		System.out.println("selectLastPage param rowPerPage:"+ rowPerPage);
+		int lastPage = 0;
+		if(totalRow % rowPerPage ==0) {
+			lastPage = rowPerPage /  rowPerPage;
+		}else {
+			lastPage = totalRow / rowPerPage +1;
+		}
+		return lastPage;
+	}
+	// 페이징 작업에 필요한 마지막페이지를 구하는 메서드 끝
+	
 	// 받아온 범위안 사원 정보를 오름차순으로 출력하는 메서드 시작
 	public List<Employee> selectEmployeesListBetween(int begin , int end){
 		List<Employee> list = new ArrayList<Employee>();

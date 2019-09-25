@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.EmployeesDao;
 
 @WebServlet("/employees/getEmployeesCountByGender")
-public class getEmployeesCountByGender extends HttpServlet {
+public class getEmployeesCountByGenderServlet extends HttpServlet {
 	EmployeesDao employeesDao;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		employeesDao = new EmployeesDao();

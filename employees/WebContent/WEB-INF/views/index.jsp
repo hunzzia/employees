@@ -1,48 +1,73 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<title>Insert title here</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- Bootstrap icons -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" 
+integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<!-- charSet -->
+<meta charset="UTF-8">
+<title>Index - HOME</title>
 </head>
 <body>
-	<h1>index</h1>
+<div class="jumbotron">
+	<div class="container">
+	  	<h1><i ><p>employees 샘플 데이터베이스를 사용하여 구현한 웹 프로젝트의 메인 페이지입니다.</p></i></h1>
+	</div>
+</div>
+
+<div class="container">
 	<h2>테이블 정보</h2>
-	<div class="container">
 	<!-- WEB APP 네비게이션 -->
-	<div class="container">
-		<ul class="nav flex-column">
+		<ul class="nav">
 			<li class="nav-item">
-    			<a class="nav-link active" href="#">기능 목록</a>
+    			<a class="nav-link href="#">기능 목록</a>
   			</li>
-			<li class="nav flex-column"><a href="${pageContext.request.contextPath}/departments/getDepartmentsList">부서목록</a></li>
-			<li class="nav flex-column"><a href="${pageContext.request.contextPath}/employees/getEmployeesList">사원목록</a></li>	
+			<li class="nav-item"><a class="text-primary nav-link" href="${pageContext.request.contextPath}/departments/getDepartmentsList">부서목록</a></li>
+			<li class="nav-item"><a class="text-primary nav-link" href="${pageContext.request.contextPath}/employees/getEmployeesList">사원목록</a></li>	
 			<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
 			<li class="nav-item">
-				사원 목록 ->
-				<a href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=asc">[오름차순]</a>
-				<a href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=desc">[내림차순]</a>
+				<a class="text-success nav-link" href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=asc">사원 목록[오름차순]</a>
+				<a class="text-success nav-link" href="${pageContext.request.contextPath}/employees/getEmployeesListOrderBy?order=desc">사원 목록[내림차순]</a>
 			</li>
-			<li class="nav flex-column"><a href="${pageContext.request.contextPath}/titles/getTitlesListDistinct">업무 목록</a></li>
-			<li class="nav flex-column"><a href="${pageContext.request.contextPath}/salaries/getSalariesStatistics">연봉 통계</a></li>
-			<li class="nav flex-column">
-				<a href="${pageContext.request.contextPath}/employees/getEmployeesCountByGender">성별 별 사원 수</a>
+			<li class="nav-item"><a class="text-primary nav-link" href="${pageContext.request.contextPath}/titles/getTitlesListDistinct">업무 목록</a></li>
+			<li class="nav-item"><a class="text-primary nav-link" href="${pageContext.request.contextPath}/salaries/getSalariesStatistics">연봉 통계</a></li>
+			<li class="nav-item">
+				<a class="text-primary nav-link" href="${pageContext.request.contextPath}/employees/getEmployeesCountByGender">성별 별 사원 수</a>
 			</li>
-			<li class="nav flex-column">
-				<a href="${pageContext.request.contextPath}/departments/getDepartmentsCountByDeptNo">현재 부서별 사원수</a>
+			<li class="nav-item">
+				<a class="text-primary nav-link" href="${pageContext.request.contextPath}/departments/getDepartmentsCountByDeptNo">현재 부서별 사원수</a>
+			</li>
+			<li class="nav-item">
+				<a class="text-primary nav-link" href="${pageContext.request.contextPath}/employees/getEmployeesListByPage">페이지별 사원목록</a>
 			</li>
 			<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
 		</ul>	
-	</div>
+	<hr>
 	<!-- 테이블 이름과 전체 행의 수 -->
-	<div class="container">
-		<table class="table table-warning table-hover">
+	<div>
+		<b>표현식 --></b> employees total row count: 300025<br>
+		<b>EL표현식 --></b> employee table row count : 300025;
+	</div>
+	<div class="d-flex">
+		<form method="post" action ="${pageContext.request.contextPath}/employees/getEmployeesListBetween">
+			<input type="number" class="form-control" name="begin" value="${minEmpNo}">~<input type="number" class="form-control" name="end" value="${maxEmpNo}">
+			<button type="submit" class="btn btn-primary">사원 목록 검색</button>
+		</form>
+	</div>
+
+		<table table class="table table-bordered table-hover"  style="text-align:center;">
 			<thead>
 				<tr>
 					<th>테이블이름</th>
@@ -76,15 +101,6 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-	<div class="container">
-		<form method="post" action ="${pageContext.request.contextPath}/employees/getEmployeesListBetween">
-			<input type="number" name="begin" value="${minEmpNo}">~<input type="number" name="end" value="${maxEmpNo}">
-			(${minEmpNo}~${maxEmpNo})
-			<button type="submit" class="btn btn-primary">사원 목록 검색</button>
-		</form>
-	</div>
-			<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->	
-	</div>
+</div>	<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->	
 </body>
 </html>
