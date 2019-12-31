@@ -1,7 +1,8 @@
 package controller;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import model.*;
+import vo.Chart;
 
 
 //1.WebServlet경로 설정
@@ -25,7 +29,9 @@ public class indexServlet extends HttpServlet {
 	private SalariesDao salariesDao;
 	private TitlesDao titlesDao;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json;charset=utf-8"); // gson 사용 선언
 		System.out.println("index URL 요청");
+		
 //3.사용할 클레스 타입의 객체 생성 , 4.값을 받을 필드 생성 후 저장
 		departmentsDao = new DepartmentsDao();
 		int departmentsRowCount = departmentsDao.selectDepartmentsRowCount();
@@ -58,5 +64,23 @@ public class indexServlet extends HttpServlet {
 
 //6.지정한 값을 서버체계 url 에 포워드 방식으로 request response views 에게 전달할 코드
 		request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
+//7.차트를 출력하기위한 리스트 생성후 gson 타입으로 리턴		
+		List<Chart> list = new ArrayList<Chart>();
+		Chart chart = new Chart();
+		chart.setDepartmentsRowCount(departmentsRowCount);
+		chart.setEmployeesRowCount(employeesRowCount);
+		chart.setDeptManagerRowCount(deptManagerRowCount);
+		chart.setDeptEmpRowCount(deptEmpRowCount);
+		chart.setSalariesRowCount(salariesRowCount);
+		chart.setTitlesRowCount(titlesRowCount);
+		
+		list.add(chart);
+		
+		System.out.println("list : " + list);
+		Gson gson = new Gson();
+		
+		String jsonStr = gson.toJson(list);
+		System.out.println("jsonStr : "+ jsonStr);
+		response.getWriter().write(jsonStr);
 	}
 }

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import model.DepartmentsDao;
 
 
@@ -22,5 +24,10 @@ public class GetDepartmentsCountByDeptNoServlet extends HttpServlet {
 		System.out.println("GetDepartmentsCountByDeptNoServlet param list :"+ list);
 		request.setAttribute("list", list);
 		request.getRequestDispatcher("/WEB-INF/views/departments/departmentsCountByDeptNo.jsp").forward(request, response);
+		
+		Gson gson = new Gson();
+		String jsonStr = gson.toJson(list);
+		
+		response.getWriter().write(jsonStr);
 	}
 }

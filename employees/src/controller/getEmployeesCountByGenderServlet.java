@@ -22,7 +22,6 @@ public class getEmployeesCountByGenderServlet extends HttpServlet {
 		
 		request.setAttribute("list", list);
 		request.getRequestDispatcher("/WEB-INF/views/employees/employeesCountByGender.jsp").forward(request, response);
-	
 	}
 
 }
