@@ -8,18 +8,30 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.EmployeesDao;
 import vo.Employee;
+
 // 1.WebServlet경로 설정
 @WebServlet("/employees/getEmployeesList")
 public class GetEmployeesListServlet extends HttpServlet {
 //2.사용할 클레스 타입의 객체 선언 => 캡슐화
 	private EmployeesDao employeesDao;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//3.limit 처리 밑 request limit 값 확인 
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 세션을 받음
+		HttpSession session = request.getSession();
+
+		// 처음 접속이거나, 로그인을 안했을 경우
+		if (session.getAttribute("sessionEmpNo") == null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
+		// 3.limit 처리 밑 request limit 값 확인
 		int limit = 10;
-		if(request.getParameter("limit") != null) {
+		if (request.getParameter("limit") != null) {
 			limit = Integer.parseInt(request.getParameter("limit"));
 		}
 //4.사용할 클레스 타입의 객체 생성 employeesDao , List

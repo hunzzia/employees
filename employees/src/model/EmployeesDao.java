@@ -7,7 +7,9 @@ import vo.*;
 public class EmployeesDao {
 	// 사원정보를 페이징 작업을 통해 출력하는 메서드 시작
 	public List<Employee> selectEmployeesListByPage(int rowPerPage , int currentPage){ // 보고싶은 갯수와 현제 페이지를 매개변수로 받아옴
+		System.out.println("selectEmployeesListByPage param rowPerPage , currentPage :"+rowPerPage+","+currentPage);
 		int startRow = (currentPage-1)*rowPerPage; // 시작갯수를 정한다
+		System.out.println("EmpDao startRow :"+startRow);
 		List<Employee> list = new ArrayList<Employee>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -38,6 +40,7 @@ public class EmployeesDao {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("DAO list"+list.toString());
 		return list;
 	}
 	// 사원정보를 페이징 작업을 통해 출력하는 메서드 끝

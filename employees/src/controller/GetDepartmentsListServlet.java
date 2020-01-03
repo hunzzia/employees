@@ -1,6 +1,6 @@
 package controller;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.DepartmentsDao;
 import vo.Department;
@@ -18,7 +19,17 @@ import vo.Department;
 public class GetDepartmentsListServlet extends HttpServlet {
 //2.사용할 클레스 타입의 객체 선언 => 캡슐화
 	private DepartmentsDao departmentsDao;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 세션을 받음
+		HttpSession session = request.getSession();
+
+		// 처음 접속이거나, 로그인을 안했을 경우
+		if (session.getAttribute("sessionEmpNo") == null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
 //4.사용할 클레스 타입의 객체 생성 후 값을 받을 필드 생성 후 저장 
 		departmentsDao = new DepartmentsDao();
 		List<Department> list = departmentsDao.selectDepartmentsList();
@@ -27,5 +38,5 @@ public class GetDepartmentsListServlet extends HttpServlet {
 //6.지정한 값을 서버체계 url 에 포워드 방식으로 request response views 에게 전달할 코드
 		request.getRequestDispatcher("/WEB-INF/views/departments/departmentsList.jsp").forward(request, response);
 	}
-	
+
 }

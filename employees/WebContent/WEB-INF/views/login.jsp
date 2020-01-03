@@ -4,25 +4,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
 <!-- jQuery library -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <!-- Popper JS -->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
 <!-- Latest compiled JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<!-- Bootstrap icons -->
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
-	crossorigin="anonymous">
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<style>
+div {
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
 </head>
 <body>
 	<div class="jumbotron">
@@ -64,50 +68,27 @@
 				<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
 			</ul>
 		</div>
-
 	</div>
-	<h1>사원 정보</h1>
 	<div class="container">
-		<form method="get" action="${pageContext.request.contextPath}/employees/getEmployeesList">
-			<!-- limit 설정  -->
-			<select name="limit">
-				<option value="10">10</option>
-				<option value="20">20</option>
-				<option value="30">30</option>
-				<option value="40">40</option>
-				<option value="50">50</option>
-			</select>
-			<button type="submit" class="btn btn-info">선택</button>
-			<table class="table table-hover">
-				<div>
-					<a href="${pageContext.request.contextPath}/">홈으로</a>
-				</div>
-				<!-- 사원 정보 제목 -->
-				<thead>
-					<tr>
-						<th>사원 번호</th>
-						<th>사원 생일</th>
-						<th>사원 성</th>
-						<th>사원 이름</th>
-						<th>사원 성별</th>
-						<th>입사 날짜</th>
-					</tr>
-				</thead>
-				<!-- 사원 정보 출력 -->
-				<tbody>
-					<c:forEach var="employee" items="${list}">
-						<tr>
-							<td>${employee.empNo}</td>
-							<td>${employee.birthDate}</td>
-							<td>${employee.firstName}</td>
-							<td>${employee.lastName}</td>
-							<td>${employee.gender}</td>
-							<td>${employee.hireDate}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+		<h1>로그인</h1>
+		<form method="post" action="${pageContext.request.contextPath}/login">
+			<div>
+				first_name : <input type="text" name="firstName" value="Georgi">
+			</div>
+			<div>
+				last_name : <input type="text" name="lastName" value="Facello">
+			</div>
+			<div>
+				emp_no : <input type="text" name="empNo" value="10001">
+			</div>
+			<div>
+				<button type="submit">로그인</button>
+			</div>
 		</form>
 	</div>
 </body>
 </html>
+
+
+
+

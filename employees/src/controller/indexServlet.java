@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
@@ -31,6 +32,14 @@ public class indexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8"); // gson 사용 선언
 		System.out.println("index URL 요청");
+		
+		// 세션을 받음
+		HttpSession session = request.getSession();
+		// 처음 접속이거나, 로그인을 안했을 경우
+		if (session.getAttribute("sessionEmpNo") == null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
 		
 //3.사용할 클레스 타입의 객체 생성 , 4.값을 받을 필드 생성 후 저장
 		departmentsDao = new DepartmentsDao();
