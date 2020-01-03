@@ -31,7 +31,7 @@ public class GetEmployeesListByPageServlet extends HttpServlet {
 		System.out.println("GetEmployeesListByPageServlet 요청");
 		// 3.사용할 변수 생성 후 받아온 값을 저장
 		employeesDao = new EmployeesDao();
-		int rowPerPage = 10;
+		int rowPerPage = 0;
 		if (request.getParameter("rowPerPage") != null) {
 			rowPerPage = Integer.parseInt(request.getParameter("rowPerPage")); // 볼 갯수
 			System.out.println("GetEmployeesListByPageServlet param rowPerPage :"+rowPerPage);
@@ -44,7 +44,7 @@ public class GetEmployeesListByPageServlet extends HttpServlet {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 			System.out.println("GetEmployeesListByPageServlet param currentPage :"+currentPage);
 		}
-		List<Employee> list = employeesDao.selectEmployeesListByPage(currentPage, rowPerPage);
+		List<Employee> list = employeesDao.selectEmployeesListByPage(rowPerPage , currentPage);
 		System.out.println("GetEmployeesListByPageServlet param list :"+list);
 		int totalRow = employeesDao.selectEmployeesRowCount();
 		System.out.println("GetEmployeesListByPageServlet param totalRow :"+totalRow);

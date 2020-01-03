@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!-- chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -18,10 +20,7 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!-- Bootstrap icons -->
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
-	crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <!-- charSet -->
 <meta charset="UTF-8">
 <title>Index - HOME</title>
@@ -68,11 +67,11 @@
 		</div>
 
 	</div>
-	<c:if test="${sessionEmpNo != null}">
+	<div class="container">
+		<c:if test="${sessionEmpNo != null}">
 		<a href="${pageContext.request.contextPath}/logout">로그아웃</a>
 		<!-- LogoutServlet -->
-	</c:if>
-	<div class="container">
+		</c:if>
 		<!-- 테이블 이름과 전체 행의 수 -->
 		<h3 style="text-align: center;">번호 입력 검색</h3>
 		<div class="container" style="width: 70%;">
@@ -111,56 +110,63 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="barchart_material" style="width: 900px; height: 500px;">
+		<!-- 차트출력(부서별 인원수 ) -->
+	<div class="card">
+	<canvas id="myChart"></canvas>
+	
+	</div>
+	
+	<footer>
+		<div style="background: gray;">
+
 		</div>
+	</footer>
 	</div>
 	<!-- < % =request.getContextPath()%> 프로잭트 이름을 리턴 -->
 </body>
-<script type="text/javascript"
-	src="https://www.gstatic.com/charts/loader.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
-	google.charts.load('current', {
-		'packages' : [ 'bar' ]
-	});
-	google.charts.setOnLoadCallback(drawStuff);
+//chart.js bar  
+var ctx = document.getElementById('myChart')
+//부서별 인원수 배열
+var deptEmpCount = [0,0,0,0,0,0,0,0,0];
+//부서명 배열
+var labelName = ["","","","","","","","",""];
+var objson;
+$.ajax({
+	url : "${pageContext.request.contextPath}/deptEmp/GetDepartmentEmpServlet",
+	method : "post",
+	success : function(json){
+		console.log("chart",json)
+		//*jsonArray - JSON 파싱
+		objson = JSON.parse(json);
+		console.log("objson",objson)
+		$(objson).each(function(index, item){
+			deptEmpCount[index] = item.count;
+			
+			labelName[index] = item.Department.deptName;
+		}); 
+		console.log("deptEmpCount::::::::::",deptEmpCount)
+		chart.update();
+	},
+})
 
-	function drawStuff() {
-		list2 = new Array;
-		$.ajax({
-			url : "${pageContext.request.contextPath}/index",
-			method : "get",
-			async : false,
-			success : function(json) {
-				list2.push([ '전체 행의수', 'count' ])
-				console.log("값" + json.list);
-				console.log("요청 성공");
-				let count = [];
-				count.push(json.list.chartdepartmentsRowCount)
-				count.push(json.list.employeesRowCount)
-				count.push(json.list.deptManagerRowCount)
-				count.push(json.list.deptEmpRowCount)
-				count.push(json.list.salariesRowCount)
-				count.push(json.list.titlesRowCount)
-				list2.push(count)
+var chart = new Chart(ctx, {
+type: 'bar',
+data: {
+    labels: labelName,
+    datasets: [{
+        label: '부서별 인원 수',
+        backgroundColor: '#bdc3c7',
+        borderColor: 'rgb(255, 99, 132)',
+        data: deptEmpCount,
+    }],
+},
 
-				console.log(list2);
-			}
-		});
-		var data = new google.visualization.arrayToDataTable(list2);
+// Configuration options go here
+options: {}
+});
 
-		var options = {
-			chart : {
-				title : '테이블의 전체 행의 수',
-			},
-			bars : 'vertical' // Required for Material Bar Charts.
-		};
-
-		var chart = new google.charts.Bar(document
-				.getElementById('barchart_material'));
-
-		chart.draw(data, google.charts.Bar.convertOptions(options));
-	};
 </script>
 </html>

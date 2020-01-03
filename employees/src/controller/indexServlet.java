@@ -73,23 +73,5 @@ public class indexServlet extends HttpServlet {
 
 //6.지정한 값을 서버체계 url 에 포워드 방식으로 request response views 에게 전달할 코드
 		request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
-//7.차트를 출력하기위한 리스트 생성후 gson 타입으로 리턴		
-		List<Chart> list = new ArrayList<Chart>();
-		Chart chart = new Chart();
-		chart.setDepartmentsRowCount(departmentsRowCount);
-		chart.setEmployeesRowCount(employeesRowCount);
-		chart.setDeptManagerRowCount(deptManagerRowCount);
-		chart.setDeptEmpRowCount(deptEmpRowCount);
-		chart.setSalariesRowCount(salariesRowCount);
-		chart.setTitlesRowCount(titlesRowCount);
-		
-		list.add(chart);
-		
-		System.out.println("list : " + list);
-		Gson gson = new Gson();
-		
-		String jsonStr = gson.toJson(list);
-		System.out.println("jsonStr : "+ jsonStr);
-		response.getWriter().write(jsonStr);
 	}
 }
